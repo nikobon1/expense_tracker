@@ -13,7 +13,7 @@ interface ScanTabProps {
   purchaseDate: string;
   isAnalyzing: boolean;
   isSaving: boolean;
-  fileInputRef: RefObject<HTMLInputElement>;
+  fileInputRef: RefObject<HTMLInputElement | null>;
   onDrop: (e: DragEvent) => void;
   onFileSelect: (file: File) => void;
   onAnalyze: () => void;
