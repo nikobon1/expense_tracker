@@ -1,65 +1,88 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import { useEffect, useState } from 'react';
+import DashboardTab from '@/features/expenses/components/DashboardTab';
+import ScanTab from '@/features/expenses/components/ScanTab';
+import { useDashboardData } from '@/features/expenses/hooks/useDashboardData';
+import { useReceiptFlow } from '@/features/expenses/hooks/useReceiptFlow';
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<'scan' | 'dashboard'>('scan');
+  const receiptFlow = useReceiptFlow();
+  const dashboardData = useDashboardData();
+  const {
+    startDate,
+    endDate,
+    expenses,
+    prevMonthTotal,
+    setStartDate,
+    setEndDate,
+    loadExpenses,
+  } = dashboardData;
+
+  useEffect(() => {
+    if (activeTab === 'dashboard') {
+      void loadExpenses();
+    }
+  }, [activeTab, startDate, endDate, loadExpenses]);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="app-container">
+      <main className="main-full">
+        {receiptFlow.alert && (
+          <div className={`alert ${receiptFlow.alert.type}`}>
+            {receiptFlow.alert.type === 'success' ? 'вњ…' : 'вќЊ'} {receiptFlow.alert.message}
+          </div>
+        )}
+
+        <header className="header">
+          <h1>рџ§ѕ РўСЂРµРєРµСЂ Р Р°СЃС…РѕРґРѕРІ</h1>
+          <p>РђРІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРµ СЂР°СЃРїРѕР·РЅР°РІР°РЅРёРµ С‡РµРєРѕРІ СЃ РїРѕРјРѕС‰СЊСЋ РР</p>
+        </header>
+
+        <div className="tabs">
+          <button className={`tab ${activeTab === 'scan' ? 'active' : ''}`} onClick={() => setActiveTab('scan')}>
+            рџ“· РЎРєР°РЅРёСЂРѕРІР°РЅРёРµ
+          </button>
+          <button
+            className={`tab ${activeTab === 'dashboard' ? 'active' : ''}`}
+            onClick={() => setActiveTab('dashboard')}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            рџ“Љ Р”Р°С€Р±РѕСЂРґ
+          </button>
         </div>
+
+        {activeTab === 'scan' ? (
+          <ScanTab
+            uploadedImage={receiptFlow.uploadedImage}
+            receiptData={receiptFlow.receiptData}
+            editedItems={receiptFlow.editedItems}
+            storeName={receiptFlow.storeName}
+            purchaseDate={receiptFlow.purchaseDate}
+            isAnalyzing={receiptFlow.isAnalyzing}
+            isSaving={receiptFlow.isSaving}
+            fileInputRef={receiptFlow.fileInputRef}
+            onDrop={receiptFlow.handleDrop}
+            onFileSelect={receiptFlow.handleFile}
+            onAnalyze={receiptFlow.handleAnalyzeReceipt}
+            onReset={receiptFlow.resetScanner}
+            onSave={receiptFlow.handleSaveReceipt}
+            onStoreNameChange={receiptFlow.setStoreName}
+            onPurchaseDateChange={receiptFlow.setPurchaseDate}
+            onItemUpdate={receiptFlow.updateItem}
+            onItemDelete={receiptFlow.deleteItem}
+            currentTotal={receiptFlow.currentTotal}
+          />
+        ) : (
+          <DashboardTab
+            startDate={startDate}
+            endDate={endDate}
+            expenses={expenses}
+            prevMonthTotal={prevMonthTotal}
+            onStartDateChange={setStartDate}
+            onEndDateChange={setEndDate}
+          />
+        )}
       </main>
     </div>
   );

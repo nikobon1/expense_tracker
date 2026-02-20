@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧾 Трекер Расходов - Vercel Edition
 
-## Getting Started
+Веб-приложение для автоматического отслеживания расходов по продуктовым чекам из магазинов Португалии.
 
-First, run the development server:
+## 🚀 Возможности
+
+- **📷 Сканирование чеков** — загрузите фото, ИИ распознает товары и цены
+- **✏️ Редактирование** — проверьте и исправьте данные перед сохранением
+- **📊 Аналитика** — графики расходов по категориям и дням
+- **📈 Сравнение** — автоматическое сравнение с предыдущим месяцем
+
+## 🛠️ Технологии
+
+- **Frontend**: Next.js 14, React, TypeScript
+- **Графики**: Recharts
+- **База данных**: Neon Postgres
+- **AI**: OpenAI GPT-4o / Google Gemini
+- **Деплой**: Vercel
+
+## 📦 Установка
+
+```bash
+npm install
+```
+
+## 🏃 Локальный запуск
+
+1. Скопируйте `.env.example` в `.env.local`
+2. Добавьте `DATABASE_URL` от Neon (опционально для локальной разработки)
+3. Запустите:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ☁️ Деплой на Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Подготовка Neon Database
 
-## Learn More
+1. Зайдите на [neon.tech](https://neon.tech) и создайте аккаунт
+2. Создайте новый проект
+3. Скопируйте `DATABASE_URL` из настроек
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Деплой
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Установите Vercel CLI: `npm i -g vercel`
+2. Выполните `vercel` в папке проекта
+3. Добавьте переменные окружения в Vercel Dashboard:
+   - `DATABASE_URL` - строка подключения к Neon
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. Использование
 
-## Deploy on Vercel
+- API ключи (OpenAI/Google) вводятся в интерфейсе приложения
+- Они не сохраняются на сервере — только в браузере
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 Структура
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+vercel-app/
+├── app/
+│   ├── api/
+│   │   ├── analyze/route.ts    # OCR через LLM
+│   │   ├── receipts/route.ts   # Сохранение чеков
+│   │   └── expenses/route.ts   # Получение данных
+│   ├── globals.css             # Стили
+│   ├── layout.tsx              # Layout
+│   └── page.tsx                # Главная страница
+├── .env.example                # Пример env
+└── package.json
+```
+
+## 🏪 Поддерживаемые магазины
+
+Continente, Pingo Doce, Lidl, Auchan, Intermarché и другие.
+
+## 📝 Категории
+
+Алкоголь, Овощи, Фрукты, Мясо, Рыба, Молочка, Хлеб, Снэки, Бытовая химия, Кафе/Ресторан, Другое.
